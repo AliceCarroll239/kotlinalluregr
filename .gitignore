@@ -1,0 +1,13 @@
+#idea
+.idea/
+**/target/
+
+#git
+*.orig
+
+logs/
+.gradle/
+.allure/
+allure-results/
+out/
+build/
