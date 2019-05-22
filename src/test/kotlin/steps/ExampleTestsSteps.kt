@@ -3,6 +3,9 @@ package steps
 import data.*
 import interfaces.*
 import io.qameta.allure.Step
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import utils.TestUtils
 import java.io.IOException
 
@@ -22,6 +25,19 @@ class ExampleTestsSteps {
         } catch (e: IOException) {
             return null
         }
+    }
+
+    @Step("GetMethodAsync")
+    fun getMethodAsync(baseURL: String, GetMethodCallback: GetMethodAsync) {
+        val request = testUtils.retrofitBuilder(baseURL)
+            .create(GetMethodResultApi::class.java).getMethod()
+        val response = request.enqueue(object : Callback<GetMethodResult> {
+            override fun onResponse(call: Call<GetMethodResult>, response: Response<GetMethodResult?>) {
+                GetMethodCallback.onRes(response.body()!!.url)
+            }
+            override fun onFailure(call: Call<GetMethodResult>, t: Throwable) {
+            }
+        })
     }
 
     @Step("PostMethod")
