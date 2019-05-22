@@ -37,8 +37,6 @@ class ExampleTests {
         fun checkGetMethod() {
             val result = stepsAgent.getMethod(testSettings)
             assertThat(result!!.url, `is`("https://httpbin.org/get"))
-            val square = { number: Int -> number * number }
-            val nine = square(3)
         }
 
         @Test
