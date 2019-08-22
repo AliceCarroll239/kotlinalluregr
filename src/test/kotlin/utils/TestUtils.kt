@@ -12,7 +12,11 @@ import java.nio.file.Paths
 class TestUtils {
 
     fun retrofitBuilder(baseURL: String): Retrofit {
-        return Retrofit.Builder().baseUrl(baseURL).addConverterFactory(GsonConverterFactory.create()).build()
+        return Retrofit.Builder()
+            .baseUrl(baseURL)
+            .addConverterFactory(GsonConverterFactory
+                .create())
+            .build()
     }
 
     fun getCurrentWorkingDirectory(): Path {

@@ -3,6 +3,8 @@ import io.qameta.allure.Feature
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.`is`
 import org.junit.jupiter.api.*
+import org.junit.jupiter.api.parallel.Execution
+import org.junit.jupiter.api.parallel.ExecutionMode
 import org.openqa.selenium.WebDriver
 import steps.ExampleUiSteps
 import utils.TestUtils
@@ -10,6 +12,8 @@ import utils.TestUtils
 @DisplayName("Google Search Example")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @TestMethodOrder(MethodOrderer.OrderAnnotation::class)
+
+@Execution(ExecutionMode.SAME_THREAD)
 
 class ExampleUiTest {
     val driver: WebDriver = TestUtils().configureFirefoxWebDriver(TestUtils().getCurrentWorkingDirectory())
@@ -24,7 +28,7 @@ class ExampleUiTest {
     @DisplayName("Open Google")
     @Description("---")
     @Feature("---")
-    fun checkAgentHealthcheck() {
+    fun openPage() {
         googlePage.run {
             open()
             assertThat(testSteps.getTitle(driver), `is`("Google"))
@@ -48,6 +52,6 @@ class ExampleUiTest {
 
     @AfterAll
     fun driverClose() {
-        driver.close()
+        driver.quit()
     }
 }

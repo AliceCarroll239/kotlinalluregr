@@ -17,7 +17,10 @@ class GoogleSearchPage(private val driver: WebDriver) {
         val searchResults = driver.findElements(By.xpath("//div[@id='rso']//div[@class='rc']//div[@class='r']//a//h3"))
         val returnResult: MutableList<String> = mutableListOf<String>()
         searchResults.forEach {
-            returnResult.add(it.getAttribute("innerHTML"))
+            returnResult.add(
+                it.getAttribute("innerHTML")
+                    .removePrefix("<div class=\"ellip\">")
+                    .removeSuffix("</div>"))
         }
         return returnResult
     }
