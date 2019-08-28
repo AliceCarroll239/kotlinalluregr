@@ -13,12 +13,13 @@ import utils.DataProvider
 import utils.TestParams
 import java.util.concurrent.atomic.AtomicLong
 import org.assertj.core.api.ErrorCollector
+import java.util.concurrent.CountDownLatch
 
 @DisplayName("Пример теста")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @TestMethodOrder(OrderAnnotation::class)
 
-@Execution(ExecutionMode.CONCURRENT)
+//@Execution(ExecutionMode.CONCURRENT)
 
 class ExampleTests {
 
@@ -72,22 +73,27 @@ class ExampleTests {
         fun checkGetMethodAsyncNotCorut() {
             val succesCount = AtomicLong()
             val failureCount = AtomicLong()
+            val latch = CountDownLatch(1000)
             for (i in 1..1000) {
                 stepsAgent.getMethodAsync(testSettings, object : GetMethodAsync {
 
                     override fun onRes(result: String) {
                         if (result.equals("https://httpbin.org/get")) {
                             succesCount.incrementAndGet()
+                            latch.countDown()
                         } else {
                             failureCount.incrementAndGet()
+                            latch.countDown()
                         }
                     }
 
                     override fun onResFailed() {
                         failureCount.incrementAndGet()
+                        latch.countDown()
                     }
                 })
             }
+            latch.await()
             println("success $succesCount")
             println("failed $failureCount")
         }
