@@ -37,6 +37,26 @@ class ExampleTests {
         @DisplayName("GET")
         @Description("---")
         @Feature("Testing different HTTP verbs")
+        fun checkGetMethodSimple() {
+            val succesCount = AtomicLong()
+            val failureCount = AtomicLong()
+
+            for (i in 1..100) {
+                if (stepsAgent.getMethod(testSettings)!!.url == "https://httpbin.org/get") {
+                    succesCount.incrementAndGet()
+                } else {
+                    failureCount.incrementAndGet()
+                }
+            }
+
+            println("success $succesCount")
+            println("failed $failureCount")
+        }
+
+        @Test
+        @DisplayName("GET")
+        @Description("---")
+        @Feature("Testing different HTTP verbs")
         fun checkGetMethodAsyncCorut() {
             val succesCount = AtomicLong()
             val failureCount = AtomicLong()
