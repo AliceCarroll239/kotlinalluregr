@@ -41,23 +41,13 @@ class ExampleTests {
             val succesCount = AtomicLong()
             val failureCount = AtomicLong()
             runBlocking {
-                val result = (1..1000).map { n ->
+                val result = (1..100).map { n ->
                     GlobalScope.async {
-                        //assert(stepsAgent.getMethod(testSettings)!!.url.equals("https://httpbin.org/get"))
-                        //assertThat(stepsAgent.getMethod(testSettings)!!.url, `is`("https://httpbin.org/get"))
-                        stepsAgent.getMethodAsync(testSettings, object : GetMethodAsync {
-                            override fun onRes(result: String) {
-                                if (result.equals("https://httpbin.org/get")) {
-                                    succesCount.incrementAndGet()
-                                } else {
-                                    failureCount.incrementAndGet()
-                                }
-                            }
-
-                            override fun onResFailed() {
-                                failureCount.incrementAndGet()
-                            }
-                        })
+                        if (stepsAgent.getMethod(testSettings)!!.url == "https://httpbin.org/get") {
+                            succesCount.incrementAndGet()
+                        } else {
+                            failureCount.incrementAndGet()
+                        }
                     }
                 }
                 result.awaitAll()
@@ -73,8 +63,9 @@ class ExampleTests {
         fun checkGetMethodAsyncNotCorut() {
             val succesCount = AtomicLong()
             val failureCount = AtomicLong()
-            val latch = CountDownLatch(1000)
-            for (i in 1..1000) {
+            val latch = CountDownLatch(100)
+
+            for (i in 1..100) {
                 stepsAgent.getMethodAsync(testSettings, object : GetMethodAsync {
 
                     override fun onRes(result: String) {
