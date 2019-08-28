@@ -48,7 +48,6 @@ class ExampleTests {
                     failureCount.incrementAndGet()
                 }
             }
-
             println("success $succesCount")
             println("failed $failureCount")
         }
@@ -109,53 +108,4 @@ class ExampleTests {
             println("failed $failureCount")
         }
     }
-
-//    @Test
-//    @DisplayName("GET timer")
-//    @Description("---")
-//    @Feature("Testing different HTTP verbs")
-//    fun waitThisShit() {
-//        for (i in 1..15) {
-//            assertThat(stepsAgent.getMethod(testSettings)!!.url, `is`("https://httpbin.org/get"))
-//        }
-//    }
-
-//        @Test
-//        @DisplayName("GET")
-//        @Description("---")
-//        @Feature("Testing different HTTP verbs")
-//        fun checkGetMethodNotAsync() {
-//            for (i in 1..100) {
-//                assertThat(stepsAgent.getMethod(testSettings)!!.url, `is`("https://httpbin.org/get"))
-//            }
-//        }
-//
-//        @Test
-//        @DisplayName("POST")
-//        @Description("---")
-//        @Feature("Testing different HTTP verbs")
-//        fun checkPostMethod() {
-//            val result = stepsAgent.postMethod(testSettings)
-//            assertThat(result!!.url, `is`("https://httpbin.org/post"))
-//        }
-//
-//        //Пример ассинхронного вызова с callback
-//        //в тесте использовать вряд ли получится
-//        // как вернуть результат в тестовый метод непонятно
-//        @Test
-//        @DisplayName("GETasync")
-//        @Description("---")
-//        @Feature("Testing different HTTP verbs")
-//        fun checkGetMethodAsync() {
-//            stepsAgent.getMethodAsync(testSettings, object : GetMethodAsync {
-//                override fun onRes(result: String) {
-//                    println(result)
-//                }
-//
-//                override fun onResFailed() {
-//                    println("Тут упало")
-//                }
-//            })
-//        }
-//}
 }
