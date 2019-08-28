@@ -61,7 +61,7 @@ class ExampleTests {
             val succesCount = AtomicLong()
             val failureCount = AtomicLong()
             runBlocking {
-                val result = (1..100).map { n ->
+                val result = (1..100).map {
                     GlobalScope.async {
                         if (stepsAgent.getMethod(testSettings)!!.url == "https://httpbin.org/get") {
                             succesCount.incrementAndGet()
