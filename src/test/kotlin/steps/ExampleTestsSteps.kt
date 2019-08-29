@@ -27,6 +27,20 @@ class ExampleTestsSteps {
         }
     }
 
+    @Step("GetMethod")
+    suspend fun getMethodSuspend(baseURL: String): GetMethodResult? {
+        val request = testUtils.retrofitBuilder(baseURL)
+            .create(GetMethodResultApi::class.java).getMethod()
+        try {
+            val responseGetMethod = request.execute()
+            return if (responseGetMethod.code() == 200) {
+                responseGetMethod.body()
+            } else null
+        } catch (e: IOException) {
+            return null
+        }
+    }
+
     @Step("GetMethodAsync")
     fun getMethodAsync(baseURL: String, GetMethodCallback: GetMethodAsync) {
         val request = testUtils.retrofitBuilder(baseURL)
