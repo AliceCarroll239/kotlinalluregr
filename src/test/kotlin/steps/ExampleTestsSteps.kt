@@ -3,6 +3,8 @@ package steps
 import data.*
 import interfaces.*
 import io.qameta.allure.Step
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -28,16 +30,16 @@ class ExampleTestsSteps {
     }
 
     @Step("GetMethod")
-    suspend fun getMethodSuspend(baseURL: String): GetMethodResult? {
+    suspend fun getMethodSuspend(baseURL: String): GetMethodResult? = withContext(Dispatchers.IO) {
         val request = testUtils.retrofitBuilder(baseURL)
             .create(GetMethodResultApi::class.java).getMethod()
         try {
             val responseGetMethod = request.execute()
-            return if (responseGetMethod.code() == 200) {
+            return@withContext if (responseGetMethod.code() == 200) {
                 responseGetMethod.body()
             } else null
         } catch (e: IOException) {
-            return null
+            return@withContext null
         }
     }
 

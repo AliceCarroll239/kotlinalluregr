@@ -3,16 +3,10 @@ import interfaces.GetMethodAsync
 import io.qameta.allure.Description
 import io.qameta.allure.Feature
 import kotlinx.coroutines.*
-import org.hamcrest.MatcherAssert.assertThat
-import org.hamcrest.Matchers.`is`
 import org.junit.jupiter.api.*
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation
-import org.junit.jupiter.api.parallel.Execution
-import org.junit.jupiter.api.parallel.ExecutionMode
-import utils.DataProvider
-import utils.TestParams
+import dao.DataProvider
 import java.util.concurrent.atomic.AtomicLong
-import org.assertj.core.api.ErrorCollector
 import java.util.concurrent.CountDownLatch
 
 @DisplayName("Пример теста")
@@ -23,10 +17,7 @@ import java.util.concurrent.CountDownLatch
 
 class ExampleTests {
 
-    val testSettings = Gson().fromJson(
-        DataProvider().loadFileAsString(DataProvider().getCurrentWorkingDirectory().resolve("src/test/resources/params.json")),
-        TestParams::class.java
-    ).baseURL
+    val testSettings = DataProvider().testSettings()
     val stepsAgent = steps.ExampleTestsSteps()
 
     @Nested
@@ -57,21 +48,22 @@ class ExampleTests {
         @Description("---")
         @Feature("Testing different HTTP verbs")
         fun checkGetMethodAsyncCorut() {
-            val succesCount = AtomicLong()
-            val failureCount = AtomicLong()
             runBlocking {
-                val result = (1..30).map { n->
-                    GlobalScope.async {
-                        println("Start coruutines $n")
+                val succesCount = AtomicLong()
+                val failureCount = AtomicLong()
+
+                val result = (1..1000).map { n ->
+                    GlobalScope.launch {
                         if (stepsAgent.getMethodSuspend(testSettings)!!.url == "https://httpbin.org/get") {
                             succesCount.incrementAndGet()
-                            println("Get result $n")
                         } else {
                             failureCount.incrementAndGet()
                         }
                     }
                 }
-                result.awaitAll()
+                result.forEach {
+                    it.join()
+                }
                 println("success $succesCount")
                 println("failed $failureCount")
             }
@@ -84,9 +76,9 @@ class ExampleTests {
         fun checkGetMethodAsyncNotCorut() {
             val succesCount = AtomicLong()
             val failureCount = AtomicLong()
-            val latch = CountDownLatch(30)
+            val latch = CountDownLatch(1000)
 
-            for (i in 1..30) {
+            for (i in 1..1000) {
                 stepsAgent.getMethodAsync(testSettings, object : GetMethodAsync {
 
                     override fun onRes(result: String) {

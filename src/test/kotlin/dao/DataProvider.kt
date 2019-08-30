@@ -1,5 +1,6 @@
-package utils
+package dao
 
+import com.google.gson.Gson
 import java.io.IOException
 import java.io.UncheckedIOException
 import java.nio.file.Files
@@ -27,5 +28,11 @@ class DataProvider {
                 throw UncheckedIOException(var2)
             }
         }
+    }
+
+    fun testSettings(): String {
+        return Gson().fromJson(
+            DataProvider().loadFileAsString(DataProvider().getCurrentWorkingDirectory().resolve("src/test/resources/params.json")),
+            TestParams::class.java).baseURL
     }
 }
